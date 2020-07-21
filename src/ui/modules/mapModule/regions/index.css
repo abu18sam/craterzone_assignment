@@ -41,9 +41,10 @@
     padding-left: 10px;
 }
 
-.table-region input[type="text"] {
+.table-region input[type="text"], .table-region input[type="number"] {
     width: 170px;
 }
+
 
 .lat-long-input-container {
     /* max-width: 450px; */

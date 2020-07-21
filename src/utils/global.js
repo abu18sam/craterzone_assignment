@@ -1,0 +1,1 @@
+global.googleMap=null;

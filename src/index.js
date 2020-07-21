@@ -4,24 +4,27 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+import './utils/global.js';
+
 //import store
-import { persistor, store } from './redux/store/Store';
+// import { persistor, store } from './redux/store/Store';
+import { store } from './redux/store/Store';
 
 //import Provider
 import { Provider } from 'react-redux';
 
 //persistGate
-import {PersistGate} from 'redux-persist/lib/integration/react';
+// import {PersistGate} from 'redux-persist/lib/integration/react';
 
 
 ReactDOM.render(
   <React.StrictMode>
   <Provider store={store}>
-    <PersistGate
-        // loading={<Loader/>}
-        persistor={persistor}>            
+    {/* <PersistGate */}
+        {/* // loading={<Loader/>} */}
+        {/* persistor={persistor}>             */}
             <App/>       
-    </PersistGate>
+    {/* </PersistGate> */}
 </Provider>
   </React.StrictMode>,
   document.getElementById('root')
