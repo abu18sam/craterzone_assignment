@@ -3,6 +3,7 @@ export const MapActions = {
     "ADD_MARKER": "ADD_MARKER"
 };
 
+// add new marker to the map
 export const addMarker = (markerData) => (dispatch, getState) => {
     // console.log('regionList=> ', state, 'NewmarkerData=> ', markerData);
     // let markers = [];
@@ -52,13 +53,13 @@ export const addMarker = (markerData) => (dispatch, getState) => {
 
 }
 
+
+// remove old markers and new markers
 export const updateMarkersList = () => (dispatch, getState) => {
 
     let markers = [];
 
-    const state = getState();
-
-    console.log("state_update=> ", state);
+    const state = getState();    
 
     if (state.MapReducer.markersList && state.MapReducer.markersList[0]) {
         let markersList = state.MapReducer.markersList;
@@ -68,36 +69,36 @@ export const updateMarkersList = () => (dispatch, getState) => {
         }
     }
 
+    // debugger;
+
     dispatch({ type: MapActions.UPDATE_MARKERS_LIST, payload: [] });
 
     let regionsList = state.RegionReducer.regionsList;
-
-    debugger;
 
     if (regionsList && regionsList[0]) {
         for (let i = 0; i < regionsList.length; i++) {
             let region = regionsList[i];
 
-            let cities = region['cities'];
+            let cities = region['cities'];            
 
             if (cities && cities[0]) {
                 for (let j = 0; j < cities.length; j++) {
-                    let city = cities[i];
+                    let city = cities[j];
 
-                    let position = { lat: Number(city.lat?city.lat:0), lng: Number(city.lng?city.lng:0) };
+                    if (!city.isDisabled) {
+                        let position = { lat: Number(city.lat), lng: Number(city.lng) };
 
-                    let marker = new window.google.maps.Marker({
-                        position: position,
-                        animation: window.google.maps.Animation.DROP,
-                        map: global.googleMap
-                    });
-
-                    // console.log('marker=> ',marker);
-
-                    // let m = { ...marker, markerId: `${region.regionId}${city.cityId}` };
-
-                    markers.push(marker);
-
+                        let marker = new window.google.maps.Marker({
+                            position: position,
+                            animation: window.google.maps.Animation.DROP,
+                            map: global.googleMap
+                        });
+    
+                        // debugger;
+    
+                        markers.push(marker);
+                    }                    
+                    
                     // debugger;
 
                     if (i === (regionsList.length - 1) && j === (cities.length - 1)) {
@@ -109,8 +110,6 @@ export const updateMarkersList = () => (dispatch, getState) => {
                     }
                 }
             }
-
-
         }
     }
 
