@@ -4,7 +4,7 @@ import './index.css';
 import RegionTable from './RegionTable';
 import { bindActionCreators } from 'redux';
 
-import { addRegion, updateRegion, addCity } from '../../../../redux/action/regionAction/RegionAction';
+import { addRegion, updateRegion, addCity, deleteSelectedCity } from '../../../../redux/action/regionAction/RegionAction';
 
 
 class Regions extends Component {
@@ -40,6 +40,7 @@ class Regions extends Component {
                                     regionIndex={regionIndex}
                                     handleInput={this.handleInput}
                                     addCityForRegion={this.addCityForRegion}
+                                    deleteSelectedCity={this.props.actions.deleteSelectedCity}
                                 />
                             )
                         })
@@ -56,7 +57,7 @@ const mapStateToProps = state => state;
 
 const mapDispatchToProps = dispatch => {
     return {
-        actions: bindActionCreators({ addRegion, updateRegion, addCity }, dispatch)
+        actions: bindActionCreators({ addRegion, updateRegion, addCity, deleteSelectedCity }, dispatch)
     }
 }
 

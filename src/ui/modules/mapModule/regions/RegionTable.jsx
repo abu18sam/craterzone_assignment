@@ -15,7 +15,7 @@ const RegionTable = (props) => {
                     name="regionName"
                     onChange={e => props.handleInput('regionName', e, props.regionIndex)} />
 
-                <button type="button">Delete Selected</button>
+                <button type="button" onClick={props.deleteSelectedCity}>Delete Selected</button>
             </div>
 
             <table className="table-region">
