@@ -5,28 +5,57 @@ export const MapActions = {
 
 // add new marker to the map
 export const addMarker = (markerData) => (dispatch, getState) => {
-    // console.log('regionList=> ', state, 'NewmarkerData=> ', markerData);
-    // let markers = [];
-    // markers=markersList;
 
-    // let position = {
-    //     lat: Number(markerData['lat']),
-    //     lng: Number(markerData['lng']),
-    //     cityName: markerData['cityName'],
-    //     cityId: markerData['cityId'],
-    //     regionName: markerData['regionName'],
-    //     regionId: markerData['regionId'],
-    //     volume: markerData['volume']
-    // };
+    let position = {
+        lat: Number(markerData['lat']),
+        lng: Number(markerData['lng']),
+    };
 
-    // const state = getState();
-
-    // console.log('state==>>>>>> ', state);
+    const state = getState();
 
 
+    let markers = [];
+    markers = state.MapReducer.markersList;
 
     if (window.google) {
-        // let marker = new window.google.maps.Marker({ position: position, map: global.googleMap });
+
+        try {
+            let markerId = `${markerData['cityId']}${markerData['regionId']}`; //create unique markerId by combining region Id with city id
+
+            let markerIndex = markers.findIndex(x => x.markerId === markerId); // to find if the current marker already exist in the google map.
+
+            if (markerIndex > -1) {
+                if (markerData.isDisabled) {
+                    // if marker exist then remove marker from map and also from the list.
+                    // markers[markerIndex].setMap(null);
+                    // markers.splice(markerIndex,1);
+                }
+                else {
+                    //if marker already exist the change the position
+                    let latlng = new window.google.maps.LatLng(position.lat, position.lng);
+                    markers[markerIndex].setPosition(latlng);
+                }
+            }
+            else if (!markerData.isDisabled) {
+                let marker = new window.google.maps.Marker({
+                    position: position,
+                    animation: window.google.maps.Animation.DROP,
+                    map: global.googleMap
+                });
+
+                marker['markerId'] = markerId;
+
+                markers.push(marker);
+            }
+        
+            dispatch({ type: MapActions.UPDATE_MARKERS_LIST, payload: markers });
+
+        }
+        catch (error) {
+            console.log("marker_error=> ", error);
+        }
+
+
         // let m = { ...marker, markerId: `${markerData['cityId']}${markerData['regionId']}` }
 
         // let contentString = `<div><span>Region Name:${position.regionName}</span><br/><span>City Name:${position.cityName}</span><br/><span>Volume:${position.volume}</span><br/></div>`;
@@ -54,12 +83,12 @@ export const addMarker = (markerData) => (dispatch, getState) => {
 }
 
 
-// remove old markers and new markers
+// remove all old markers and new markers
 export const updateMarkersList = () => (dispatch, getState) => {
 
     let markers = [];
 
-    const state = getState();    
+    const state = getState();
 
     if (state.MapReducer.markersList && state.MapReducer.markersList[0]) {
         let markersList = state.MapReducer.markersList;
@@ -79,7 +108,7 @@ export const updateMarkersList = () => (dispatch, getState) => {
         for (let i = 0; i < regionsList.length; i++) {
             let region = regionsList[i];
 
-            let cities = region['cities'];            
+            let cities = region['cities'];
 
             if (cities && cities[0]) {
                 for (let j = 0; j < cities.length; j++) {
@@ -93,12 +122,12 @@ export const updateMarkersList = () => (dispatch, getState) => {
                             animation: window.google.maps.Animation.DROP,
                             map: global.googleMap
                         });
-    
+
                         // debugger;
-    
+
                         markers.push(marker);
-                    }                    
-                    
+                    }
+
                     // debugger;
 
                     if (i === (regionsList.length - 1) && j === (cities.length - 1)) {

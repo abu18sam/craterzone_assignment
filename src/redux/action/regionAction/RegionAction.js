@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid'; // to create a unique id for each city and region
 
-import {addMarker, updateMarkersList} from '../mapActions/MapActions';
+import { addMarker, updateMarkersList } from '../mapActions/MapActions';
 
 export const RegionActions = {
     "UPDATE_REGION_TABLE": "UPDATE_REGION_TABLE",
@@ -63,57 +63,60 @@ export const updateRegion = (state, type, e, regionIndex, cityIndex) => dispatch
 
     let city;
 
-    if(cityIndex || cityIndex===0) {
+    if (cityIndex || cityIndex === 0) {
         city = regionsList[regionIndex]['cities'][cityIndex];
     }
 
-     
 
-    if (type === 'regionName' && ( e.target.value==='' || regeexpName.test(e.target.value) ) ) {
+
+    if (type === 'regionName' && (e.target.value === '' || regeexpName.test(e.target.value))) {
         regionsList[regionIndex]['regionName'] = e.target.value;
         updateStore = true;
     }
-    else if (type === "isDisabled" ) {
-        regionsList[regionIndex]['cities'][cityIndex][type] = e.target.checked;
-        updateStore = true;
+    else if (type === "isDisabled") {
+        if ( city && city.lat && city.lng) {
+            regionsList[regionIndex]['cities'][cityIndex][type] = e.target.checked;
+            updateStore = true;
+        }       
     }
     else if ((type === 'lat' || type === 'lng')) {
         regionsList[regionIndex]['cities'][cityIndex][type] = e.target.value;
         updateStore = true;
     }
-    else if (type === 'cityName' && ( e.target.value==='' || regeexpName.test(e.target.value) ) ) {
+    else if (type === 'cityName' && (e.target.value === '' || regeexpName.test(e.target.value))) {
         regionsList[regionIndex]['cities'][cityIndex][type] = e.target.value;
         updateStore = true;
     }
     else if (type === 'volume') {
         regionsList[regionIndex]['cities'][cityIndex][type] = e.target.value;
         updateStore = true;
-    }    
+    }
 
     if (updateStore) {
         dispatch(dispatchUpdateRegionAction(regionsList));
     }
-    
 
-    if (city && city['lat'] && city['lng'] && !city['isDisabled']) {
-        
+
+    if (city && city['lat'] && city['lng'] ) {
+
         let markerData = {
+            isDisabled:city['isDisabled'],
             lat: city['lat'],
             lng: city['lng'],
             cityName: city['cityName'],
             volume: city['volume'],
             cityId: city['cityId'],
             regionName: regionsList[regionIndex]['regionName'],
-            regionId: regionsList[regionIndex]['regionId'],            
+            regionId: regionsList[regionIndex]['regionId'],
         }
 
         dispatch(addMarker(markerData));
 
-        dispatch(updateMarkersList());
+        // dispatch(updateMarkersList());
 
     }
 
-    
+
 
 }
 
